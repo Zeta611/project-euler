@@ -1,7 +1,7 @@
 open Core
 
 type value = N of int | J | Q | K | A [@@deriving eq, ord]
-type suit = C | D | H | S [@@deriving eq, ord]
+type suit = char
 type card = value * suit
 type rank = HighCard | OnePair | TwoPair | ThreeOfAKind | Straight | Flush
           | FullHouse | FourOfAKind | StraightFlush (* contains royal flush *)
@@ -28,7 +28,7 @@ let check_straight hand =
 let check_flush hand = (
   hand
   |> List.map ~f:get_suit
-  |> List.remove_consecutive_duplicates ~equal:equal_suit
+  |> List.remove_consecutive_duplicates ~equal:equal_char
   |> List.length
 ) = 1
 
@@ -80,13 +80,7 @@ let parse str =
     | 'A' -> A
     | c -> N (Char.get_digit_exn c)
   in
-  let suit = match str.[1] with
-    | 'C' -> C
-    | 'D' -> D
-    | 'H' -> H
-    | 'S' -> S
-    | _ -> failwith "Unknown value"
-  in
+  let suit = str.[1] in
   (value, suit)
 
 let () =
