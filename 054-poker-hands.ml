@@ -158,20 +158,12 @@ let determine_winner hand1 hand2 =
 
 let card_from_string str =
   let value = match str.[0] with
-    | '2' -> N 2
-    | '3' -> N 3
-    | '4' -> N 4
-    | '5' -> N 5
-    | '6' -> N 6
-    | '7' -> N 7
-    | '8' -> N 8
-    | '9' -> N 9
     | 'T' -> N 10
     | 'J' -> J
     | 'Q' -> Q
     | 'K' -> K
     | 'A' -> A
-    | _ -> failwith "Unknown value"
+    | c -> N (Char.get_digit_exn c)
   in
   let suit = match str.[1] with
     | 'C' -> C
