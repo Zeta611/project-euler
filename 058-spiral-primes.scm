@@ -1,3 +1,4 @@
+; Stream utilities
 (define-syntax cons-stream
   (syntax-rules ()
     ((_ a b)
@@ -19,11 +20,6 @@
             (proc (stream-car s))
             (stream-map proc (stream-cdr s))))))
 
-(define (stream-first pred s)
-  (cond ((stream-null? s) #f)
-        ((pred (stream-car s)) (stream-car s))
-        (else (stream-first pred (stream-cdr s)))))
-
 (define (stream-filter pred s)
   (cond ((stream-null? s) the-empty-stream)
         ((pred (stream-car s))
@@ -33,28 +29,10 @@
         (else
           (stream-filter pred (stream-cdr s)))))
 
-(define primes
-  (cons-stream
-    2
-    (stream-filter prime?
-                   (integers-starting-from 3))))
-
-(define (integers-starting-from n)
-  (cons-stream
-    n
-    (integers-starting-from (+ n 1))))
-
-(define (square n)
-  (* n n))
-
-(define (prime? n)
-  (let loop ((ps primes))
-    (cond ((< n (square (stream-car ps)))
-           #t)
-          ((divisible? n (stream-car ps))
-           #f)
-          (else
-            (loop (stream-cdr ps))))))
+(define (stream-first pred s)
+  (cond ((stream-null? s) #f)
+        ((pred (stream-car s)) (stream-car s))
+        (else (stream-first pred (stream-cdr s)))))
 
 (define (take n stream)
   (cond ((= n 0) '())
@@ -63,9 +41,6 @@
         (else
           (cons (stream-car stream)
                 (take (- n 1) (stream-cdr stream))))))
-
-(define (divisible? n q)
-  (= (remainder n q) 0))
 
 (define (stream-accumulate op init s)
   (if (stream-null? s)
@@ -87,6 +62,34 @@
     (apply zip
            (map stream-cdr streams))))
 
+; Primes
+(define (integers-starting-from n)
+  (cons-stream
+    n
+    (integers-starting-from (+ n 1))))
+
+(define (square n)
+  (* n n))
+
+(define (divisible? n q)
+  (= (remainder n q) 0))
+
+(define primes
+  (cons-stream
+    2
+    (stream-filter prime?
+                   (integers-starting-from 3))))
+
+(define (prime? n)
+  (let loop ((ps primes))
+    (cond ((< n (square (stream-car ps)))
+           #t)
+          ((divisible? n (stream-car ps))
+           #f)
+          (else
+            (loop (stream-cdr ps))))))
+
+; Solve problem
 (define tl-spiral
   (stream-map
     (lambda (n)
