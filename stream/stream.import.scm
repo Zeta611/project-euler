@@ -39,11 +39,11 @@
     (stream-add . stream#stream-add)
     (stream-zip . stream#stream-zip)
     (integers-starting-from . stream#integers-starting-from)
-    (primes . stream#primes)
+    (prime-stream . stream#prime-stream)
     (prime? . stream#prime?)
-    (integers . stream#integers)
-    (merge-weighted . stream#merge-weighted)
-    (weighted-pairs . stream#weighted-pairs))
+    (nat-stream . stream#nat-stream)
+    (stream-merge-weighted . stream#stream-merge-weighted)
+    (stream-weighted-tuples . stream#stream-weighted-tuples))
   (scheme#list
     (scheme#cons 'cons-stream (syntax-rules () ((_ a b) (cons a (delay b)))))
     (scheme#cons

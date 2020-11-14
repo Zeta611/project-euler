@@ -1,8 +1,8 @@
 (define-library (stream)
   (export cons-stream stream-car stream-cdr stream-null? the-empty-stream
           stream-map stream-filter stream-first stream-take stream-accumulate
-          stream-add stream-zip integers-starting-from primes prime? integers
-          merge-weighted weighted-pairs)
+          stream-add stream-zip integers-starting-from prime-stream prime?
+          nat-stream stream-merge-weighted stream-weighted-tuples)
   (import (scheme base)
           (scheme lazy))
   (begin
@@ -42,7 +42,7 @@
             (else (stream-first pred (stream-cdr s)))))
 
     (define (stream-take n stream)
-      (cond ((= n 0) '())
+      (cond ((zero? n) '())
             ((stream-null? stream)
              (error "End of stream reached -- STREAM-TAKE"))
             (else
@@ -69,16 +69,15 @@
         (apply stream-zip
                (map stream-cdr streams))))
 
-    ; Primes
     (define (integers-starting-from n)
       (cons-stream
         n
         (integers-starting-from (+ n 1))))
 
     (define (divisible? n q)
-      (= (remainder n q) 0))
+      (zero? (remainder n q)))
 
-    (define (merge-weighted s1 s2 weight)
+    (define (stream-merge-weighted weight s1 s2)
       (cond ((stream-null? s1) s2)
             ((stream-null? s2) s1)
             (else
@@ -87,45 +86,59 @@
                      (s1car-weight (weight s1car))
                      (s2car-weight (weight s2car)))
                 (cond ((<= s1car-weight s2car-weight)
-                       (cons-stream s1car
-                                    (merge-weighted (stream-cdr s1) s2 weight)))
+                       (cons-stream
+                         s1car
+                         (stream-merge-weighted weight
+                                                (stream-cdr s1)
+                                                s2)))
                       ((> s1car-weight s2car-weight)
-                       (cons-stream s2car
-                                    (merge-weighted s1 (stream-cdr s2)
-                                                    weight))))))))
-                      ; (else
-                      ;   (cons-stream s1car
-                      ;                (cons-stream s2car
-                      ;                             (merge-weighted (stream-cdr s1)
-                      ;                                             (stream-cdr s2)
-                      ;                                             weight)))))))))
+                       (cons-stream
+                         s2car
+                         (stream-merge-weighted weight
+                                                s1
+                                                (stream-cdr s2)))))))))
 
-    (define (weighted-pairs s t weight)
-      (cons-stream
-        (list (stream-car s) (stream-car t))
-        (merge-weighted
-          (merge-weighted
-            (stream-map (lambda (x) (list (stream-car s) x))
-                        (stream-cdr t))
-            (stream-map (lambda (x) (list x (stream-car t)))
-                        (stream-cdr s))
-            weight)
-          (weighted-pairs (stream-cdr s)
-                          (stream-cdr t)
-                          weight)
-          weight)))
+    (define (stream-weighted-tuples weight . streams)
+      (if (null? streams)
+          (cons-stream '() the-empty-stream)
+          (let* ((stream (car streams))
+                 (rest (cdr streams))
+                 (rest-tuples
+                   (apply stream-weighted-tuples
+                          (lambda (tuple)  ; partial weight
+                            (weight (cons (stream-car stream) tuple)))
+                          rest)))
+            (let combine-with-rest ((stream stream)
+                                    (rest-tuples rest-tuples))
+              (if (or (stream-null? stream)
+                      (stream-null? rest-tuples))
+                  the-empty-stream  ; {} x S = {}
+                  (let ((s-car (stream-car stream))
+                        (s-cdr (stream-cdr stream))
+                        (r-car (stream-car rest-tuples))
+                        (r-cdr (stream-cdr rest-tuples)))
+                    (cons-stream (cons s-car r-car)
+                                 (stream-merge-weighted
+                                   weight
+                                   (stream-map (lambda (t) (cons s-car t))
+                                               r-cdr)
+                                   (stream-merge-weighted
+                                     weight
+                                     (stream-map (lambda (x) (cons x r-car))
+                                                 s-cdr)
+                                     (combine-with-rest s-cdr r-cdr))))))))))
 
-    (define integers
+    (define nat-stream
       (integers-starting-from 1))
 
-    (define primes
+    (define prime-stream
       (cons-stream
         2
         (stream-filter prime?
                        (integers-starting-from 3))))
 
     (define (prime? n)
-      (let loop ((ps primes))
+      (let loop ((ps prime-stream))
         (cond ((< n (square (stream-car ps)))
                #t)
               ((divisible? n (stream-car ps))
