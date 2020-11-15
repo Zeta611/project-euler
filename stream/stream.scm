@@ -1,8 +1,9 @@
 (define-library (stream)
   (export cons-stream stream-car stream-cdr stream-null? the-empty-stream
-          stream-map stream-filter stream-first stream-take stream-accumulate
-          stream-add stream-zip integers-starting-from prime-stream prime?
-          nat-stream stream-merge-weighted stream-weighted-tuples)
+          stream-map stream-filter stream-first stream-take stream-take-while
+          stream-accumulate stream-add stream-zip integers-starting-from
+          prime-stream prime? nat-stream stream-merge-weighted
+          stream-weighted-tuples)
   (import (scheme base)
           (scheme lazy))
   (begin
@@ -48,6 +49,13 @@
             (else
               (cons (stream-car stream)
                     (stream-take (- n 1) (stream-cdr stream))))))
+
+    (define (stream-take-while pred s)
+      (if (or (stream-null? s)
+              (not (pred (stream-car s))))
+          '()
+          (cons (stream-car s)
+                (stream-take-while pred (stream-cdr s)))))
 
     (define (stream-accumulate op init s)
       (if (stream-null? s)

@@ -35,6 +35,7 @@
     (stream-filter . stream#stream-filter)
     (stream-first . stream#stream-first)
     (stream-take . stream#stream-take)
+    (stream-take-while . stream#stream-take-while)
     (stream-accumulate . stream#stream-accumulate)
     (stream-add . stream#stream-add)
     (stream-zip . stream#stream-zip)
