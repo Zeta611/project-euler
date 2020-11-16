@@ -65,17 +65,17 @@
 (define satisfying-tuples-2
   (list-ec (:list p primes)
            (:list q primes)
-           (if (and (> q p)
-                    (check q p)))
+           (and (> q p)
+                (check q p))
            (:list r primes)
-           (if (and (> r q)
-                    (check r q p)))
+           (and (> r q)
+                (check r q p))
            (:list s primes)
-           (if (and (> s r)
-                    (check s r q p)))
+           (and (> s r)
+                (check s r q p))
            (:list t primes)
-           (if (and (> t s)
-                    (check t s r q p)))
+           (and (> t s)
+                (check t s r q p))
            (begin
              (let ((satisfying (list p q r s t)))
                (display "Found (p q r s t), sum: ")
@@ -84,7 +84,6 @@
                (display (+ p q r s t))
                (newline)))
            (list p q r s t)))
-
 
 (display satisfying-tuples-2)
 (newline)
