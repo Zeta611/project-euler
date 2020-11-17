@@ -1,4 +1,4 @@
-num="""
+num = """
 37107287533902102798797998220837590246510135740250
 46376937677490009712648124896970078050417018260538
 74324986199524741059474233309513058123726617309629
@@ -102,15 +102,15 @@ num="""
 """
 num = num.split()
 List = [list(num[i]) for i in range(100)]
-Sum = [0]*50 
+Sum = [0] * 50
 for digit in range(50):
-	for number in range(100):
-		List[number][digit] = int(List[number][digit])
-		Sum[digit] += List[number][digit]
-S=0
+    for number in range(100):
+        List[number][digit] = int(List[number][digit])
+        Sum[digit] += List[number][digit]
+S = 0
 for i in range(50):
-	S+=Sum[i]*10**(50-i)
-k=50
-while 10**k<S:
-	k+=1
-print S/(10**(k-10))
+    S += Sum[i] * 10 ** (50 - i)
+k = 50
+while 10 ** k < S:
+    k += 1
+print S / (10 ** (k - 10))

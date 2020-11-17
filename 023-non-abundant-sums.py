@@ -1,15 +1,17 @@
 import time
 
+
 def prop_div(n):
-    div_list = [1] 
-    for i in range(2, int(n**.5)+1):
+    div_list = [1]
+    for i in range(2, int(n ** 0.5) + 1):
         if n % i == 0:
-            if i != n/i:
-                div_list += [i, n/i]
+            if i != n / i:
+                div_list += [i, n / i]
             else:
                 div_list += [i]
     # div_list.sort()
     return div_list
+
 
 def det_perfect(n):
     PERFECT = 0
@@ -21,12 +23,14 @@ def det_perfect(n):
         return DEFICIENT
     return ABUNDANT
 
+
 def list_abundant(limit):
     abundant_numbers = []
-    for i in range(1, limit+1):
+    for i in range(1, limit + 1):
         if det_perfect(i) == 1:
             abundant_numbers.append(i)
     return abundant_numbers
+
 
 def imp_sum_abundant():
     LIMIT = 28123
@@ -40,7 +44,7 @@ def imp_sum_abundant():
                 break
             pos_sum_abundant.add(e)
     result = []
-    for i in range(1, LIMIT+1):
+    for i in range(1, LIMIT + 1):
         if i not in pos_sum_abundant:
             result.append(i)
     return result
@@ -49,5 +53,4 @@ def imp_sum_abundant():
 start = time.time()
 print sum(imp_sum_abundant())
 end = time.time()
-print "%.5f ms" % ((end - start)*1000)
-
+print "%.5f ms" % ((end - start) * 1000)

@@ -1,4 +1,4 @@
-s = '''
+s = """
 75
 95 64
 17 47 82
@@ -14,29 +14,33 @@ s = '''
 91 71 52 38 17 14 91 43 58 50 27 29 48
 63 66 04 68 89 53 67 30 73 16 69 87 40 31
 04 62 98 27 23 09 70 98 73 93 38 53 60 04 23
-'''
+"""
 
 s = s.split()
 
+
 def triangle(s):
-	length = len(s)
-	n = int(((8 * length + 1) ** 0.5 - 1) / 2.0)
-	p = [[None] * (i + 1) for i in range(n)]
-	for i in range(n):
-		for j in range(i + 1):
-			p[i][j] = int(s.pop(0))
-	return p
+    length = len(s)
+    n = int(((8 * length + 1) ** 0.5 - 1) / 2.0)
+    p = [[None] * (i + 1) for i in range(n)]
+    for i in range(n):
+        for j in range(i + 1):
+            p[i][j] = int(s.pop(0))
+    return p
+
 
 def main(s):
-	length = len(s)
-	if length == 1: return s[0][0]
-	length -= 1
-	for j in range(length):
-		if s[length - 1][j] + s[length][j] > s[length - 1][j] + s[length][j + 1]:
-			s[length - 1][j] = s[length - 1][j] + s[length][j]
-		else:
-			s[length - 1][j] = s[length - 1][j] + s[length][j + 1]
-	del s[-1]
-	return main(s)
+    length = len(s)
+    if length == 1:
+        return s[0][0]
+    length -= 1
+    for j in range(length):
+        if s[length - 1][j] + s[length][j] > s[length - 1][j] + s[length][j + 1]:
+            s[length - 1][j] = s[length - 1][j] + s[length][j]
+        else:
+            s[length - 1][j] = s[length - 1][j] + s[length][j + 1]
+    del s[-1]
+    return main(s)
+
 
 print main(triangle(s))

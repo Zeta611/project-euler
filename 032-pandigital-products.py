@@ -1,5 +1,6 @@
 import time
 
+
 def pandigital(m):
     m_word = str(m)
     m_list = list(m_word)
@@ -8,16 +9,18 @@ def pandigital(m):
     m_list.sort()
     return m_list == range(1, 10)
 
+
 def subpandigital(m):
     m_word = str(m)
     m_list = list(m_word)
     for i in range(len(m_list)):
         m_list[i] = int(m_list[i])
     m_list.sort()
-    for i in range(len(m_list)-1):
+    for i in range(len(m_list) - 1):
         if m_list[i] == m_list[i + 1]:
             return False
     return True
+
 
 prod_rec = []
 
