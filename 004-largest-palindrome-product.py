@@ -3,10 +3,10 @@ def is_palindrome(n):
     return s == s[::-1]
 
 
-palindromes = [
+palindromes = (
     x * y
     for x in range(100, 1000)
     for y in range(x, 1000)
     if is_palindrome(x * y)
-]
+)
 print(max(palindromes))
