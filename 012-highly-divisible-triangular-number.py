@@ -1,31 +1,28 @@
-def nthtrinum(n):
-    return n * (n + 1) / 2
+def triangle(n):
+    return n * (n + 1) // 2
 
 
-def numofdivisors(N):
-    cnt = [0]
-    p = 2
-    while N > 1:
-        if N % p == 0:
-            N /= p
-            cnt[p - 2] += 1
+def num_divisors(n):
+    factor = 2
+    factor_cnt = 0
+    cnt = 1
+    while n > 1:
+        if n % factor == 0:
+            n //= factor
+            factor_cnt += 1
         else:
-            p += 1
-            cnt.append(0)
-    P = 1
-    for n in cnt:
-        if n != 0:
-            P *= n + 1
-    return P
+            factor += 1 if factor == 2 else 2
+            cnt *= factor_cnt + 1
+            factor_cnt = 0
+    cnt *= factor_cnt + 1
+    return cnt
 
 
-def main():
-    n = 1
-    while True:
-        T = nthtrinum(n)
-        if numofdivisors(T) > 500:
-            return T
-        n += 1
+n = 1
+while True:
+    t = triangle(n)
+    if num_divisors(t) > 500:
+        break
+    n += 1
 
-
-print main()
+print(t)
