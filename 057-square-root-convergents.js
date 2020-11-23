@@ -1,6 +1,7 @@
 function countDigits(n) {
-  for (var count = 0; n > 0; ++count) {
-    n = (n - n % 10n) / 10n;
+  let count;
+  for (count = 0; n > 0; count += 1) {
+    n = (n - (n % 10n)) / 10n;
   }
   return count;
 }
@@ -11,11 +12,11 @@ function gcd(a, b) {
   }
   if (b === 1n) {
     return 1n;
-  } else if (b === 0n) {
-    return a;
-  } else {
-    return gcd(b, a % b);
   }
+  if (b === 0n) {
+    return a;
+  }
+  return gcd(b, a % b);
 }
 
 function Fraction(numer, denom) {
@@ -23,9 +24,10 @@ function Fraction(numer, denom) {
   this.numer = numer / g;
   this.denom = denom / g;
 
-  this.add = other => new Fraction(
+  this.add = (other) => new Fraction(
     this.numer * other.denom + this.denom * other.numer,
-    this.denom * other.denom);
+    this.denom * other.denom,
+  );
 
   this.inverse = () => new Fraction(this.denom, this.numer);
 }
@@ -34,18 +36,17 @@ Fraction.one = new Fraction(1n, 1n);
 
 function memo(f) {
   const array = [];
-  return function(n) {
+  return function (n) {
     if (array[n] === undefined) {
       const result = f(n);
       array[n] = result;
       return result;
-    } else {
-      return array[n];
     }
-  }
+    return array[n];
+  };
 }
 
-const expansion = memo(function(n) {
+const expansion = memo((n) => {
   if (n === 0) {
     return Fraction.one;
   }
@@ -57,10 +58,10 @@ const expansion = memo(function(n) {
 
 function solve(n) {
   let count = 0;
-  for (let i = 1; i <= n; ++i) {
+  for (let i = 1; i <= n; i += 1) {
     const frac = expansion(i);
     if (countDigits(frac.numer) > countDigits(frac.denom)) {
-      ++count;
+      count += 1;
     }
   }
   return count;
