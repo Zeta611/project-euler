@@ -1,35 +1,38 @@
-import time
+from enum import Enum
+
+
+class Number(Enum):
+    PERFECT = 0
+    DEFICIENT = 1
+    ABUNDANT = 2
 
 
 def prop_div(n):
     div_list = [1]
     for i in range(2, int(n ** 0.5) + 1):
         if n % i == 0:
-            if i != n / i:
-                div_list += [i, n / i]
+            if i != n // i:
+                div_list += [i, n // i]
             else:
                 div_list += [i]
-    # div_list.sort()
     return div_list
 
 
 def det_perfect(n):
-    PERFECT = 0
-    DEFICIENT = -1
-    ABUNDANT = 1
     if sum(prop_div(n)) == n:
-        return PERFECT
-    if sum(prop_div(n)) < n:
-        return DEFICIENT
-    return ABUNDANT
+        return Number.PERFECT
+    elif sum(prop_div(n)) < n:
+        return Number.DEFICIENT
+    else:
+        return Number.ABUNDANT
 
 
 def list_abundant(limit):
-    abundant_numbers = []
+    abundant = []
     for i in range(1, limit + 1):
-        if det_perfect(i) == 1:
-            abundant_numbers.append(i)
-    return abundant_numbers
+        if det_perfect(i) == Number.ABUNDANT:
+            abundant.append(i)
+    return abundant
 
 
 def imp_sum_abundant():
@@ -50,7 +53,4 @@ def imp_sum_abundant():
     return result
 
 
-start = time.time()
-print sum(imp_sum_abundant())
-end = time.time()
-print "%.5f ms" % ((end - start) * 1000)
+print(sum(imp_sum_abundant()))

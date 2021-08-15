@@ -6,7 +6,7 @@ while len(primes) <= 10001:
     for p in primes:
         if p > bound:
             break
-        if test % p== 0:
+        if test % p == 0:
             found_factor = True
             break
     if not found_factor:

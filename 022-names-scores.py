@@ -1,12 +1,9 @@
-fin = open("022-names.txt", "r")
-ilist = fin.read().split('","')
-ilist[0] = ilist[0][1:]
-ilist[-1] = ilist[-1][:-1]
-ilist.sort()
-result = 0
-for i in range(len(ilist)):
-    S = 0
-    for letter in ilist[i]:
-        S += ord(letter) - ord("A") + 1
-    result += S * (i + 1)
-print result
+with open("022-names.txt", "r") as fin:
+    names = sorted(name.strip('"') for name in fin.read().split(","))
+    result = 0
+    for i, name in enumerate(names):
+        sum_ = 0
+        for letter in name:
+            sum_ += ord(letter) - ord("A") + 1
+        result += sum_ * (i + 1)
+    print(result)

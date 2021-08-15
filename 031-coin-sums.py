@@ -1,3 +1,4 @@
+# TODO rewrite!
 solution_list = {
     0: set([frozenset({1: 0, 2: 0, 5: 0, 10: 0, 20: 0, 50: 0, 100: 0, 200: 0}.items())])
 }
@@ -20,4 +21,4 @@ def solve(price):
     return result
 
 
-print len(solve(200))
+print(len(solve(200)))

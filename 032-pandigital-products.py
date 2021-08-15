@@ -1,47 +1,28 @@
-import time
+def pandigital(n):
+    return sorted(map(int, str(n))) == list(range(1, 10))
 
 
-def pandigital(m):
-    m_word = str(m)
-    m_list = list(m_word)
-    for i in range(len(m_list)):
-        m_list[i] = int(m_list[i])
-    m_list.sort()
-    return m_list == range(1, 10)
-
-
-def subpandigital(m):
-    m_word = str(m)
-    m_list = list(m_word)
-    for i in range(len(m_list)):
-        m_list[i] = int(m_list[i])
-    m_list.sort()
-    for i in range(len(m_list) - 1):
-        if m_list[i] == m_list[i + 1]:
+def subpandigital(n):
+    l = sorted(map(int, str(n)))
+    for i in range(len(l) - 1):
+        if l[i] == l[i + 1]:
             return False
     return True
 
 
-prod_rec = []
-
-start = time.time()
-
+prod_rec = set()
 for x in range(2, 10):
     for y in range(1000, 10000):
         z = x * y
-        xyz = str(x) + str(y) + str(z)
-        if pandigital(xyz):
-            if z not in prod_rec:
-                prod_rec.append(z)
+        if pandigital(f"{x}{y}{z}"):
+            prod_rec.add(z)
 
 for x in range(10, 100):
-    if subpandigital(x):
-        for y in range(100, 1000):
-            z = x * y
-            xyz = str(x) + str(y) + str(z)
-            if pandigital(xyz):
-                if z not in prod_rec:
-                    prod_rec.append(z)
+    if not subpandigital(x):
+        continue
+    for y in range(100, 1000):
+        z = x * y
+        if pandigital(f"{x}{y}{z}"):
+            prod_rec.add(z)
 
-print sum(prod_rec)
-print time.time() - start, "s"
+print(sum(prod_rec))

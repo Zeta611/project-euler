@@ -1,16 +1,6 @@
-import time
-
-
-def main():
-    n = 2
-    Fi = 1
-    Ff = 1
-    while Ff < 10 ** 999:
-        n += 1
-        Fi, Ff = Ff, Fi + Ff
-    return n
-
-
-start = time.time()
-print main()
-print time.time() - start
+n = 2
+f0 = f1 = 1
+while f1 < 10 ** 999:
+    n += 1
+    f0, f1 = f1, f0 + f1
+print(n)

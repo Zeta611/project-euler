@@ -4,9 +4,6 @@ def is_palindrome(n):
 
 
 palindromes = (
-    x * y
-    for x in range(100, 1000)
-    for y in range(x, 1000)
-    if is_palindrome(x * y)
+    x * y for x in range(100, 1000) for y in range(x, 1000) if is_palindrome(x * y)
 )
 print(max(palindromes))

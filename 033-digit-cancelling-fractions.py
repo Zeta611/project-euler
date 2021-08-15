@@ -1,5 +1,5 @@
 def frac_eq(r1, r2):
-    return (r1[0] * r2[1] - r1[1] * r2[0]) == 0
+    return r1[0] * r2[1] - r1[1] * r2[0] == 0
 
 
 def gcd(a, b):
@@ -50,5 +50,4 @@ num = den = 1
 for r in result:
     num *= r[0]
     den *= r[1]
-g = gcd(num, den)
-print(den // g)
+print(den // gcd(num, den))

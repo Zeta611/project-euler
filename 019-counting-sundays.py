@@ -1,55 +1,42 @@
-def isLeapYear(Y):
-    if Y % 400 == 0:
+def is_leap_year(year):
+    if year % 400 == 0:
         return True
-    if Y % 100 == 0:
+    if year % 100 == 0:
         return False
-    if Y % 4 == 0:
-        return True
-    return False
+    return year % 4 == 0
 
 
-def DayinMonth(Y, M):
-    if M in [9, 4, 6, 11]:
+def days_in_month(year, month):
+    if month in [4, 6, 9, 11]:
         return 30
-    if M == 2:
-        if isLeapYear(Y):
-            return 29
-        return 28
+    if month == 2:
+        return 29 if is_leap_year(year) else 28
     return 31
 
 
-def DayPastNewYear(Y, M, D):
+def days_past_new_year(year, month, day):
     result = 0
-    for m in range(1, M):
-        result += DayinMonth(Y, m)
-    result += D
+    for m in range(1, month):
+        result += days_in_month(year, m)
+    result += day
     return result - 1
 
 
-def DayPastGivenDate(Y, M, D):
+def days_past(year, month, day):
     result = 0
-    for y in range(1900, Y):
-        if isLeapYear(y):
-            result += 366
-        else:
-            result += 365
-    result += DayPastNewYear(Y, M, D)
+    for y in range(1900, year):
+        result += 366 if is_leap_year(y) else 365
+    result += days_past_new_year(year, month, day)
     return result
 
 
-def isSunday(Y, M, D):
-    if DayPastGivenDate(Y, M, D) % 7 == 6:
-        return True
-    return False
+def is_sunday(year, month, day):
+    return days_past(year, month, day) % 7 == 6
 
 
-def main():
-    cnt = 0
-    for y in range(1901, 2000 + 1):
-        for m in range(1, 12 + 1):
-            if isSunday(y, m, 1):
-                cnt += 1
-    return cnt
-
-
-print main()
+cnt = 0
+for y in range(1901, 2001):
+    for m in range(1, 13):
+        if is_sunday(y, m, 1):
+            cnt += 1
+print(cnt)
