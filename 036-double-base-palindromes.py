@@ -1,19 +1,20 @@
+from collections import deque
+
+
 def is_palindrome(n, base):
-    n_copy = n
-    count = 0
-    while n_copy:
-        n_copy /= base
-        count += 1
-    n_copy = n
-    palindrome = 0
-    for i in xrange(count):
-        palindrome += (n_copy % base) * base ** (count - 1)
-        n_copy /= base
-        count -= 1
-    return palindrome == n
+    digits = deque()
+    copy_n = n
+    while copy_n:
+        digits.append(copy_n % base)
+        copy_n //= base
+
+    rev_n = 0
+    while digits:
+        rev_n *= base
+        rev_n += digits.popleft()
+    return n == rev_n
 
 
-sum_ = 0
-for n in xrange(1, 1000000000):
-    sum_ += n * (is_palindrome(n, 2) and is_palindrome(n, 10))
-print sum_
+print(
+    sum(n for n in range(1, 1000000, 2) if is_palindrome(n, 2) and is_palindrome(n, 10))
+)

@@ -2,10 +2,10 @@ def prime_eratosthenes(n):
     sieve = [1] * n
     sieve[0] = 0
     primes = set()
-    for p in xrange(2, n + 1):
+    for p in range(2, n + 1):
         if sieve[p - 1]:
             primes.add(p)
-            for i in xrange(p ** 2, n + 1, p):
+            for i in range(p ** 2, n + 1, p):
                 sieve[i - 1] = 0
     return primes
 
@@ -15,7 +15,7 @@ def truncatable_prime(p, sieve):
     while p_copy:
         if p_copy not in sieve:
             return False
-        p_copy /= 10
+        p_copy //= 10
     m = 10
     while p > m:
         if p % m not in sieve:
@@ -25,7 +25,6 @@ def truncatable_prime(p, sieve):
 
 
 sieve = prime_eratosthenes(1000000)
-print truncatable_prime(3797, sieve)
 sum_ = 0
 count = 0
 res = []
@@ -37,4 +36,4 @@ for p in sieve:
             res.append(p)
     if count >= 11:
         break
-print sum_
+print(sum_)

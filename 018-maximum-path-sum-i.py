@@ -36,7 +36,7 @@ def max_sum(s):
             s[length - 1][j] = s[length - 1][j] + s[length][j]
         else:
             s[length - 1][j] = s[length - 1][j] + s[length][j + 1]
-    del s[-1]
+    s.pop()
     return max_sum(s)
 
 
