@@ -1,166 +1,153 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <numeric>
+#include <utility>
 
-long gcd(long a, long b)
-{
-    if (a < b) {
-        const long tmp{a};
-        a = b;
-        b = tmp;
-    }
-    while (b) {
-        const long tmp{b};
-        b = a % b;
-        a = tmp;
-    }
-    return a;
-}
+template <class T> struct Fraction {
+    T numerator{0};
+    T denominator{1};
 
-struct Fraction {
-    long numerator = 0;
-    long denominator = 1;
-
-    Fraction(long n, long d, bool reduce = true)
+    Fraction(T n, T d)
     {
         if (d == 0) {
             exit(EXIT_FAILURE);
         }
 
-        const bool negative{(n < 0 && d > 0) || (n > 0 && d < 0)};
-        n = std::abs(n);
-        d = std::abs(d);
+        const bool negative{n < 0 && d > 0 || n > 0 && d < 0};
+        n = abs(n);
+        d = abs(d);
 
-        this->numerator = negative ? -n : n;
-        this->denominator = d;
-        if (reduce) {
-            this->reduce();
-        }
+        numerator = negative ? -n : n;
+        denominator = d;
+        reduce();
     }
 
-    Fraction(long n) : numerator{n} {}
+    Fraction(T n) : numerator{n} {}
     Fraction() {}
 
     void reduce()
     {
-        const long g{gcd(this->numerator, this->denominator)};
-        this->denominator /= g;
-        this->numerator /= g;
+        const T g{std::gcd(numerator, denominator)};
+        denominator /= g;
+        numerator /= g;
     }
 
-    Fraction operator-() const
-    {
-        return Fraction{-this->numerator, this->denominator};
-    }
+    Fraction operator-() const { return Fraction{-numerator, denominator}; }
 
     Fraction &operator++()
     {
-        ++this->numerator;
+        numerator += denominator;
         return *this;
     }
 
     Fraction operator++(int)
     {
-        const Fraction tmp{*this};
-        ++this->numerator;
+        const auto tmp{*this};
+        numerator += denominator;
         return tmp;
     }
 
     Fraction &operator--()
     {
-        --this->numerator;
+        numerator -= denominator;
         return *this;
     }
 
     Fraction operator--(int)
     {
-        const Fraction tmp{*this};
-        --this->numerator;
+        const auto tmp{*this};
+        numerator -= denominator;
         return tmp;
     }
 };
 
-Fraction operator+(const Fraction &a, const Fraction &b)
+template <class T>
+Fraction<T> operator+(const Fraction<T> &a, const Fraction<T> &b)
 {
-    return Fraction{a.numerator * b.denominator + a.denominator * b.numerator,
-                    a.denominator * b.denominator};
+    return {a.numerator * b.denominator + a.denominator * b.numerator,
+            a.denominator * b.denominator};
 }
 
-Fraction operator-(const Fraction &a, const Fraction &b)
+template <class T>
+Fraction<T> operator-(const Fraction<T> &a, const Fraction<T> &b)
 {
-    return Fraction{a.numerator * b.denominator - a.denominator * b.numerator,
-                    a.denominator * b.denominator};
+    return {a.numerator * b.denominator - a.denominator * b.numerator,
+            a.denominator * b.denominator};
 }
 
-Fraction operator*(const Fraction &a, const Fraction &b)
+template <class T>
+Fraction<T> operator*(const Fraction<T> &a, const Fraction<T> &b)
 {
-    return Fraction{a.numerator * b.numerator, a.denominator * b.denominator};
+    return {a.numerator * b.numerator, a.denominator * b.denominator};
 }
 
-Fraction operator/(const Fraction &a, const Fraction &b)
+template <class T>
+Fraction<T> operator/(const Fraction<T> &a, const Fraction<T> &b)
 {
-    return Fraction{a.numerator * b.denominator, a.denominator * b.numerator};
+    return {a.numerator * b.denominator, a.denominator * b.numerator};
 }
 
-bool operator==(const Fraction &a, const Fraction &b)
+template <class T> bool operator==(const Fraction<T> &a, const Fraction<T> &b)
 {
     return a.numerator == b.numerator && a.denominator == b.denominator;
 }
 
-bool operator>(const Fraction &a, const Fraction &b)
+template <class T> bool operator>(const Fraction<T> &a, const Fraction<T> &b)
 {
     return a.numerator * b.denominator > a.denominator * b.numerator;
 }
 
-bool operator>=(const Fraction &a, const Fraction &b)
+template <class T> bool operator>=(const Fraction<T> &a, const Fraction<T> &b)
 {
     return a.numerator * b.denominator >= a.denominator * b.numerator;
 }
 
-bool operator<(const Fraction &a, const Fraction &b)
+template <class T> bool operator<(const Fraction<T> &a, const Fraction<T> &b)
 {
     return a.numerator * b.denominator < a.denominator * b.numerator;
 }
 
-bool operator<=(const Fraction &a, const Fraction &b)
+template <class T> bool operator<=(const Fraction<T> &a, const Fraction<T> &b)
 {
     return a.numerator * b.denominator <= a.denominator * b.numerator;
 }
 
-std::ostream &operator<<(std::ostream &s, const Fraction &f)
+template <class T>
+std::ostream &operator<<(std::ostream &s, const Fraction<T> &f)
 {
     return s << f.numerator << '/' << f.denominator;
 }
 
-Fraction search_slightly_smaller_than(const Fraction &frac, long dlim)
+Fraction<int> search_slightly_smaller_than(const Fraction<int> &frac, int dlim)
 {
-    Fraction res;
-    for (long d{3}; d <= dlim; ++d) {
-        long left{1};
-        long right{d - 1};
+    Fraction<int> res;
+
+    for (int d{3}; d <= dlim; ++d) {
+        int left{1};
+        int right{d - 1};
         Fraction f{left, d};
+
         while (left <= right) {
-            const long middle{(left + right) / 2};
-            const Fraction tmp{middle, d};
-            if (tmp < frac) {
+            const int middle{(left + right) / 2};
+            if (const Fraction tmp{middle, d}; tmp < frac) {
                 f = tmp;
                 left = middle + 1;
             } else {
                 right = middle - 1;
             }
         }
-        if (res < f) {
-            res = f;
-        }
+        res = std::max(res, f);
     }
+
     res.reduce();
     return res;
 }
 
 int main()
 {
-    constexpr long MAX{1'000'000};
+    constexpr int MAX{1'000'000};
     const Fraction FRAC{3, 7};
+
     std::cout << search_slightly_smaller_than(FRAC, MAX) << '\n';
-    return 0;
 }
