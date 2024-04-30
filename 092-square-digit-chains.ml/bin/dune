@@ -1,0 +1,4 @@
+(executable
+ (public_name square_digit_chains)
+ (name main)
+ (libraries square_digit_chains core))
