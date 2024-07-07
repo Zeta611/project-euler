@@ -1,0 +1,4 @@
+(executable
+ (public_name large_non_mersenne_prime)
+ (name main)
+ (libraries core zarith large_non_mersenne_prime))
